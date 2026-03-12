@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài Tập Tiếng Anh 50 Câu - Số 3</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --success: #27ae60;
+            --error: #e74c3c;
+            --accent: #3498db;
+            --bg: #f4f7f6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+        }
+
+        #final-summary {
+            display: none;
+            background: var(--primary);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+            position: sticky;
+            top: 10px;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .summary-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 15px;
+            font-size: 1.2em;
+        }
+
+        .question-card {
+            background: #fff;
+            padding: 25px;
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            margin-bottom: 35px;
+        }
+
+        .question-text { font-weight: bold; font-size: 1.15em; margin-bottom: 25px; line-height: 1.6; color: #333; }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .option {
+            padding: 18px 25px;
+            border: 2px solid #edeff2;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1.05em;
+            background: #fff;
+        }
+
+        .option:hover { border-color: var(--accent); background: #f0f7ff; }
+
+        .option.correct { background-color: #d4edda !important; border-color: var(--success) !important; color: #155724; font-weight: bold; }
+        .option.wrong { background-color: #f8d7da !important; border-color: var(--error) !important; color: #721c24; }
+        .option.disabled { pointer-events: none; opacity: 0.8; }
+
+        .button-group { margin-top: 20px; display: flex; gap: 15px; }
+
+        .btn-sm { padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; color: white; font-weight: bold; font-size: 0.9em; }
+        .btn-explain { background-color: var(--success); }
+        .btn-translate { background-color: var(--error); }
+
+        .info-box { margin-top: 15px; padding: 15px; border-radius: 8px; display: none; line-height: 1.6; font-size: 1em; }
+        .explain-box { background-color: #f1fcf4; border-left: 5px solid var(--success); color: #1e4627; }
+        .translate-box { background-color: #fff5f5; border-left: 5px solid var(--error); font-style: italic; color: #5d2121; }
+
+        .btn-finish {
+            background-color: #e67e22;
+            color: white;
+            padding: 18px 80px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            display: block;
+            margin: 50px auto;
+            transition: 0.3s;
+        }
+
+        .btn-finish:hover { background-color: #d35400; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+
+        @media (max-width: 700px) { .options-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="final-summary">
+        <h2>TỔNG KẾT KẾT QUẢ</h2>
+        <div style="font-size: 2.8em; margin: 10px 0; font-weight: 800;"><span id="score-10">0</span>/10</div>
+        <div class="summary-stats">
+            <span style="color: #2ecc71;">✅ Đúng: <span id="count-correct">0</span></span>
+            <span style="color: #ff7675;">❌ Sai: <span id="count-wrong">0</span></span>
+            <span>📝 Tổng: 50 câu</span>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-bottom: 40px;">
+        <h1 style="color: var(--primary); font-size: 2.2em;">BÀI TẬP TIẾNG ANH TỔNG HỢP (50 CÂU)</h1>
+        <p style="color: #666; font-size: 1.1em;">Chọn đáp án đúng. Kết quả sẽ hiện ra ngay lập tức!</p>
+    </div>
+
+    <div id="quiz-body"></div>
+
+    <button class="btn-finish" onclick="showFinalSummary()">TỔNG KẾT BÀI LÀM</button>
+</div>
+
+<script>
+    const questions = [
+        { id: 1, q: "Only after the train __________ a few kilometers did Alex notice he had boarded the wrong one.", options: ["was moving", "had moved", "has moved", "moves"], correct: "B", explain: "Hành động 'tàu chạy' xảy ra trước hành động 'nhận ra' (notice - quá khứ đơn), nên dùng thì Quá khứ hoàn thành.", translate: "Chỉ sau khi con tàu đã đi được vài km, Alex mới nhận ra mình đã lên nhầm tàu." },
+        { id: 2, q: "Over the past two decades, we __________ massive progress in digital technology.", options: ["observe", "have observed", "observed", "are observing"], correct: "B", explain: "Dấu hiệu 'Over the past + khoảng thời gian' dùng thì Hiện tại hoàn thành.", translate: "Trong hai thập kỷ qua, chúng ta đã chứng kiến sự tiến bộ to lớn trong công nghệ kỹ thuật số." },
+        { id: 3, q: "Maya captured amazing photos of birds while she __________ in the jungle.", options: ["was trekking", "is trekking", "trekked", "had trekked"], correct: "A", explain: "Hành động đang xảy ra (đang leo núi) thì hành động khác (chụp ảnh) xen vào trong quá khứ.", translate: "Maya đã chụp được những bức ảnh chim tuyệt đẹp trong khi cô ấy đang đi leo núi trong rừng." },
+        { id: 4, q: "Emma __________ in the same apartment since she graduated.", options: ["lived", "had lived", "was living", "has lived"], correct: "D", explain: "Dấu hiệu 'since + mốc thời gian/mệnh đề QKĐ' dùng thì Hiện tại hoàn thành.", translate: "Emma đã sống ở cùng một căn hộ kể từ khi cô ấy tốt nghiệp." },
+        { id: 5, q: "He’ll call you back as soon as he __________ his lunch.", options: ["finish", "has finished", "will finish", "finished"], correct: "B", explain: "Mệnh đề trạng ngữ chỉ thời gian dùng Hiện tại đơn hoặc Hiện tại hoàn thành để chỉ hành động hoàn tất trong tương lai.", translate: "Anh ấy sẽ gọi lại cho bạn ngay sau khi anh ấy ăn xong bữa trưa." },
+        { id: 6, q: "I __________ your brother at Green Street yesterday afternoon.", options: ["meet", "met", "have met", "had met"], correct: "B", explain: "Dấu hiệu 'yesterday afternoon' dùng thì Quá khứ đơn.", translate: "Tớ đã gặp anh trai cậu ở phố Green vào chiều qua." },
+        { id: 7, q: "After she __________ for help, she __________ off her shoes and __________ in to save him.", options: ["shouted / took / jumped", "shouted / had taken / jumped", "had shouted / had taken / jumped", "had shouted / took / jumped"], correct: "D", explain: "Hành động hét lên xảy ra trước (QKHT), các hành động cởi giày và nhảy xuống xảy ra nối tiếp sau đó (QKĐ).", translate: "Sau khi đã hét lên cầu cứu, cô ấy cởi giày và nhảy xuống để cứu anh ta." },
+        { id: 8, q: "I haven't met him since he __________ school.", options: ["left", "had left", "was leaving", "was left"], correct: "A", explain: "Cấu trúc: Hiện tại hoàn thành + since + Quá khứ đơn.", translate: "Tớ chưa gặp lại anh ấy kể từ khi anh ấy rời trường." },
+        { id: 9, q: "We __________ very close friends since we __________ in primary school.", options: ["have been / were", "are / were", "had been / were", "were / were"], correct: "A", explain: "Dùng Hiện tại hoàn thành cho trạng thái kéo dài và Quá khứ đơn cho mốc thời gian trong quá khứ.", translate: "Chúng tôi đã là bạn rất thân kể từ khi chúng tôi còn học tiểu học." },
+        { id: 10, q: "When I came to see her, she __________ dinner.", options: ["had", "has", "was having", "is having"], correct: "C", explain: "Hành động đang diễn ra (đang ăn tối) thì hành động khác (đến thăm) xen vào.", translate: "Khi tớ đến thăm cô ấy, cô ấy đang ăn tối." },
+        { id: 11, q: "The boys __________ soccer when it began to rain.", options: ["played", "were playing", "have played", "had played"], correct: "B", explain: "Hành động đang diễn ra (đang chơi bóng) thì bị hành động khác (trời mưa) xen vào.", translate: "Mấy cậu bé đang chơi bóng đá thì trời bắt đầu mưa." },
+        { id: 12, q: "I __________ the doorbell while I __________ a book.", options: ["heard / was reading", "heard / read", "was hearing / read", "was hearing / was reading"], correct: "A", explain: "Hành động đọc sách kéo dài, hành động nghe thấy tiếng chuông xen vào.", translate: "Tớ nghe thấy tiếng chuông cửa khi đang đọc một cuốn sách." },
+        { id: 13, q: "They __________ each other for years before they finally got married.", options: ["know", "knew", "have known", "had known"], correct: "D", explain: "Dùng Quá khứ hoàn thành cho hành động xảy ra trước một thời điểm/hành động khác trong quá khứ.", translate: "Họ đã quen biết nhau nhiều năm trước khi cuối cùng họ kết hôn." },
+        { id: 14, q: "As soon as she ________ her work, she went home.", options: ["finish", "finished", "had finished", "was finishing"], correct: "C", explain: "Hành động hoàn thành công việc xảy ra trước hành động đi về trong quá khứ.", translate: "Ngay sau khi hoàn thành công việc, cô ấy đã đi về nhà." },
+        { id: 15, q: "By the time the police arrived, the thieves ________.", options: ["escape", "escaped", "have escaped", "had escaped"], correct: "D", explain: "Cấu trúc By the time + QKĐ, QKHT.", translate: "Vào lúc cảnh sát đến, những tên trộm đã tẩu thoát rồi." },
+        { id: 16, q: "This is the most interesting movie I ________.", options: ["ever saw", "have ever seen", "had ever seen", "was ever seeing"], correct: "B", explain: "Cấu trúc so sánh nhất đi với Hiện tại hoàn thành.", translate: "Đây là bộ phim thú vị nhất mà tớ từng xem." },
+        { id: 17, q: "I ________ this letter since this morning.", options: ["write", "wrote", "have been writing", "was writing"], correct: "C", explain: "Dùng Hiện tại hoàn thành tiếp diễn cho hành động bắt đầu từ quá khứ và kéo dài đến hiện tại.", translate: "Tớ đã viết bức thư này suốt từ sáng nay." },
+        { id: 18, q: "Wait here until I ________ back.", options: ["come", "will come", "came", "have come"], correct: "A", explain: "Sau 'until' chỉ thời gian tương lai dùng Hiện tại đơn.", translate: "Hãy đợi ở đây cho tới khi tớ quay lại." },
+        { id: 19, q: "I __________ the film before I __________ the book.", options: ["watched / read", "had watched / read", "watched / had read", "had watched / had read"], correct: "B", explain: "Xem phim trước (QKHT), đọc sách sau (QKĐ).", translate: "Tớ đã xem phim trước khi tớ đọc cuốn sách đó." },
+        { id: 20, q: "She __________ for the company for ten years before she was promoted.", options: ["worked", "has worked", "had been working", "was working"], correct: "C", explain: "Nhấn mạnh quá trình làm việc liên tục trước một thời điểm quá khứ.", translate: "Cô ấy đã làm việc cho công ty được 10 năm trước khi được thăng chức." },
+        { id: 21, q: "We are considering ________ a new car.", options: ["buy", "to buy", "buying", "bought"], correct: "C", explain: "Sau 'consider' dùng V-ing.", translate: "Chúng tôi đang cân nhắc việc mua một chiếc xe ô tô mới." },
+        { id: 22, q: "I hope ________ you again soon.", options: ["see", "seeing", "to see", "saw"], correct: "C", explain: "Sau 'hope' dùng to-V.", translate: "Tớ hy vọng sẽ sớm gặp lại cậu." },
+        { id: 23, q: "They decided ________ to the beach for their holiday.", options: ["go", "going", "to go", "went"], correct: "C", explain: "Sau 'decide' dùng to-V.", translate: "Họ đã quyết định đi biển vào kỳ nghỉ." },
+        { id: 24, q: "He suggested ________ a movie tonight.", options: ["watch", "to watch", "watching", "watched"], correct: "C", explain: "Sau 'suggest' dùng V-ing.", translate: "Anh ấy đề nghị đi xem phim tối nay." },
+        { id: 25, q: "I can't imagine ________ without music.", options: ["live", "to live", "living", "lived"], correct: "C", explain: "Sau 'imagine' dùng V-ing.", translate: "Tớ không thể tưởng tượng nổi cuộc sống mà không có âm nhạc." },
+        { id: 26, q: "She promised ________ me with my homework.", options: ["help", "helping", "to help", "helped"], correct: "C", explain: "Sau 'promise' dùng to-V.", translate: "Cô ấy hứa sẽ giúp tớ làm bài tập về nhà." },
+        { id: 27, q: "Would you mind ________ the door?", options: ["close", "to close", "closing", "closed"], correct: "C", explain: "Sau 'mind' dùng V-ing.", translate: "Cậu có phiền đóng cửa lại không?" },
+        { id: 28, q: "I'm looking forward to ________ you next week.", options: ["see", "seeing", "to see", "saw"], correct: "B", explain: "Cấu trúc 'look forward to + V-ing'.", translate: "Tớ rất mong được gặp cậu vào tuần tới." },
+        { id: 29, q: "They practiced ________ the piano every day.", options: ["play", "to play", "playing", "played"], correct: "C", explain: "Sau 'practice' dùng V-ing.", translate: "Họ đã luyện tập chơi đàn piano mỗi ngày." },
+        { id: 30, q: "He managed ________ the difficult math problem.", options: ["solve", "solving", "to solve", "solved"], correct: "C", explain: "Cấu trúc 'manage to-V' (xoay xở để làm gì).", translate: "Anh ấy đã xoay xở giải được bài toán khó." },
+        { id: 31, q: "I avoid ________ to that crowded place.", options: ["go", "to go", "going", "gone"], correct: "C", explain: "Sau 'avoid' dùng V-ing.", translate: "Tớ tránh đi đến nơi đông đúc đó." },
+        { id: 32, q: "She admitted ________ the vase.", options: ["break", "to break", "breaking", "broken"], correct: "C", explain: "Sau 'admit' dùng V-ing.", translate: "Cô ấy thừa nhận đã làm vỡ chiếc bình." },
+        { id: 33, q: "We arranged ________ at the airport.", options: ["meet", "meeting", "to meet", "met"], correct: "C", explain: "Sau 'arrange' dùng to-V.", translate: "Chúng tôi đã sắp xếp để gặp nhau tại sân bay." },
+        { id: 34, q: "It's no use ________ about it.", options: ["cry", "to cry", "crying", "cried"], correct: "C", explain: "Cấu trúc 'It's no use + V-ing' (vô ích khi làm gì).", translate: "Thật vô ích khi ngồi khóc lóc về việc đó." },
+        { id: 35, q: "I'm not used to ________ up so early.", options: ["get", "to get", "getting", "got"], correct: "C", explain: "Cấu trúc 'be used to + V-ing' (quen với việc gì).", translate: "Tớ không quen với việc dậy sớm như vậy." },
+        { id: 36, q: "He denied ________ the money.", options: ["steal", "to steal", "stealing", "stolen"], correct: "C", explain: "Sau 'deny' dùng V-ing.", translate: "Anh ấy phủ nhận việc lấy trộm tiền." },
+        { id: 37, q: "She seems ________ a very kind person.", options: ["be", "being", "to be", "been"], correct: "C", explain: "Sau 'seem' dùng to-V.", translate: "Cô ấy có vẻ là một người rất tốt bụng." },
+        { id: 38, q: "I enjoy ________ in the garden.", options: ["work", "to work", "working", "worked"], correct: "C", explain: "Sau 'enjoy' dùng V-ing.", translate: "Tớ thích làm việc trong vườn." },
+        { id: 39, q: "They offered ________ us with our project.", options: ["help", "helping", "to help", "helped"], correct: "C", explain: "Sau 'offer' dùng to-V.", translate: "Họ đề nghị giúp đỡ chúng tôi với dự án." },
+        { id: 40, q: "He keeps ________ the same mistake.", options: ["make", "to make", "making", "made"], correct: "C", explain: "Sau 'keep' dùng V-ing.", translate: "Anh ấy cứ lặp đi lặp lại cùng một lỗi sai." },
+        { id: 41, q: "We have lived in this town for ten years.", options: ["We started living in this town ten years ago.", "We moved to this town ten years ago.", "It's ten years since we started living in this town.", "All are correct."], correct: "D", explain: "Cả 3 cách viết lại đều tương đương với câu gốc dùng Hiện tại hoàn thành.", translate: "Chúng tôi đã sống ở thị trấn này được 10 năm rồi. (Mọi đáp án đều đúng)." },
+        { id: 42, q: "I last saw him in 2015.", options: ["I haven't seen him since 2015.", "I didn't see him since 2015.", "I haven't seen him for 2015.", "I last seen him since 2015."], correct: "A", explain: "Viết lại câu 'Last + V2/ed' sang Hiện tại hoàn thành phủ định.", translate: "Lần cuối tớ gặp anh ấy là năm 2015 = Tớ chưa gặp anh ấy từ năm 2015." },
+        { id: 43, q: "She began playing the piano when she was five.", options: ["She has played the piano since she was five.", "She has been playing the piano since she was five.", "Both A and B are correct.", "She started to playing the piano when she was five."], correct: "C", explain: "Bắt đầu làm gì đó trong quá khứ có thể viết lại bằng Hiện tại hoàn thành hoặc Hiện tại hoàn thành tiếp diễn.", translate: "Cô ấy bắt đầu chơi piano từ lúc 5 tuổi = Cô ấy đã chơi piano từ khi lên 5." },
+        { id: 44, q: "I haven't been to a movie theater for months.", options: ["The last time I went to a movie theater was months ago.", "I last went to a movie theater months ago.", "It's months since I last went to a movie theater.", "All are correct."], correct: "D", explain: "Mọi cách viết lại này đều đúng ngữ pháp và nghĩa.", translate: "Tớ đã không đi xem phim nhiều tháng rồi. (Mọi đáp án đều đúng)." },
+        { id: 45, q: "When did you start learning English?", options: ["How long have you learned English?", "How long have you been learning English?", "How long ago did you start learning English?", "All are correct."], correct: "D", explain: "Các câu hỏi về thời gian bắt đầu hành động có nhiều cách diễn đạt tương đương.", translate: "Bạn bắt đầu học tiếng Anh từ khi nào? (Mọi đáp án đều đúng)." },
+        { id: 46, q: "\"May I borrow your bicycle this afternoon?\"", options: ["\"Would you mind lending me your bicycle this afternoon?\"", "\"You must lend me your bicycle this afternoon.\"", "\"Do I have to borrow your bicycle this afternoon?\"", "\"It is necessary that I take your bicycle this afternoon.\""], correct: "A", explain: "Cấu trúc 'Would you mind lending' là cách nhờ vả lịch sự tương đương với câu đề bài.", translate: "Chiều nay tớ mượn xe đạp của cậu được không?" },
+        { id: 47, q: "In these plans nothing has been overlooked.", options: ["These plans have covered nothing.", "These plans have covered everything.", "In these plans nothing has been looked over.", "In these plans everything has been looked over."], correct: "D", explain: "Nothing overlooked = everything looked over/checked (mọi thứ đã được xem xét/kiểm tra kỹ).", translate: "Trong những kế hoạch này, không có gì bị bỏ sót cả." },
+        { id: 48, q: "I'm very pleased that we shall meet again soon.", options: ["We shall never meet each other again.", "I've been looking for you for a long time.", "I'm looking forward to meeting you again soon.", "Please don't come and meet us again."], correct: "C", explain: "Cấu trúc 'be pleased to/that...' tương đương với 'look forward to V-ing'.", translate: "Tớ rất vui vì chúng ta sẽ sớm gặp lại nhau." },
+        { id: 49, q: "Her living conditions were not good. She studied very well.", options: ["She studied very well although her living conditions were not easy.", "She studied very well just because she lived in difficult conditions.", "Living in difficult conditions forced she to study very well.", "Living in difficult conditions, she had no choice but to study well."], correct: "A", explain: "Sử dụng 'although' để nối hai câu có ý nghĩa tương phản.", translate: "Cô ấy học rất giỏi mặc dù điều kiện sống không được tốt lắm." },
+        { id: 50, q: "A child is influenced as much by his schooling as by his parents.", options: ["Schooling doesn't influence a child as much as his parents do.", "A child's parents have greater influence on him than his schooling.", "A child's schooling and his parents have an equal influence on him.", "A child is influenced more by his schooling than his parents."], correct: "C", explain: "Cấu trúc 'as much... as...' chỉ sự bằng nhau/tương đương.", translate: "Một đứa trẻ chịu ảnh hưởng từ giáo dục ở trường cũng nhiều như từ cha mẹ vậy." }
+    ];
+
+    let correctCount = 0;
+    let wrongCount = 0;
+    const answeredCount = new Set();
+
+    function initQuiz() {
+        const body = document.getElementById('quiz-body');
+        questions.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.innerHTML = `
+                <div class="question-text">Câu ${item.id}. ${item.q}</div>
+                <div class="options-grid" id="group-${item.id}">
+                    ${item.options.map((opt, i) => {
+                        const label = String.fromCharCode(65 + i);
+                        return `<div class="option" onclick="checkAnswer(${item.id}, '${label}', this)">${label}. ${opt}</div>`;
+                    }).join('')}
+                </div>
+                <div class="button-group">
+                    <button class="btn-sm btn-explain" onclick="toggleInfo('exp-${item.id}')">Giải thích</button>
+                    <button class="btn-sm btn-translate" onclick="toggleInfo('trans-${item.id}')">Dịch nghĩa</button>
+                </div>
+                <div id="exp-${item.id}" class="info-box explain-box"><strong>💡 Giải thích:</strong> ${item.explain}</div>
+                <div id="trans-${item.id}" class="info-box translate-box"><strong>🇻🇳 Dịch nghĩa:</strong> ${item.translate}</div>
+            `;
+            body.appendChild(card);
+        });
+    }
+
+    window.checkAnswer = function(qId, choice, el) {
+        if (answeredCount.has(qId)) return;
+
+        const question = questions.find(q => q.id === qId);
+        const parent = document.getElementById(`group-${qId}`);
+        const options = parent.querySelectorAll('.option');
+
+        answeredCount.add(qId);
+
+        if (choice === question.correct) {
+            el.classList.add('correct');
+            correctCount++;
+        } else {
+            el.classList.add('wrong');
+            wrongCount++;
+            options.forEach(opt => {
+                if (opt.innerText.startsWith(question.correct)) opt.classList.add('correct');
+            });
+        }
+
+        options.forEach(opt => opt.classList.add('disabled'));
+    };
+
+    window.showFinalSummary = function() {
+        const total = questions.length;
+        if (answeredCount.size < total) {
+            if (!confirm(`Bạn mới làm ${answeredCount.size}/${total} câu. Bạn có chắc muốn xem kết quả sớm không?`)) return;
+        }
+
+        const score10 = (correctCount / total) * 10;
+        
+        document.getElementById('final-summary').style.display = 'block';
+        document.getElementById('score-10').innerText = score10.toFixed(1);
+        document.getElementById('count-correct').innerText = correctCount;
+        document.getElementById('count-wrong').innerText = total - correctCount;
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.toggleInfo = (id) => {
+        const el = document.getElementById(id);
+        el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+    };
+
+    initQuiz();
+</script>
+
+</body>
+</html>
